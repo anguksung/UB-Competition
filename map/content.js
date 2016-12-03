@@ -17,47 +17,49 @@ for(var school in schools){
 	}
 }
 
-
-function findSchoolCoords(){
-	var e = document.getElementById('schools');
-	var selected = e.options[e.selectedIndex].text;
-
-	var coordsForRightNow = [-1,-1];
-
-	var address = 11;
-	var lat = 1;
-	var long = 2;
-	coordsForRightNow[0] = schools[selected][address][lat];
-	coordsForRightNow[1] = schools[selected][address][long];
-
-	var coordinates = coordsForRightNow;
-
-	// get right Coordinates
-	if(coordsForRightNow[0] != -1)
-		coordinates = coordsForRightNow;
-
+function addMoreMarkers() {
+	var schoolsDropDown = document.getElementById('schools');
+	// var selected = e.options[e.selectedIndex].text;
 	document.getElementById("mapDiv").style.height = "500px";
 	document.getElementById('h1').innerHTML = '';
-
-	// if(firstMap) L.map.remove();
 
 	if (firstMap != undefined) { 
 		firstMap.remove();
 	}
 
-	firstMap = L.map('mapDiv').setView(coordinates, 10);
 
-	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-	attribution: 'Markers & Popups',
-	maxZoom: 10,
-	noWrap: true}).addTo(firstMap);
-	firstMarker = L.marker(coordinates).addTo(firstMap);
+	firstMap = L.map('mapDiv').setView([41.588, -73], 9);
+
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'Markers & Popups', maxZoom: 20, noWrap: true}).addTo(firstMap);
+
+	markers = [];
+
+	for (var i = 0; i < 10; i++) {
+		var coords = findSchoolCoords(schoolsDropDown.options[i].text);
+		markers[i] = L.marker(coords).addTo(firstMap);
+	}
 }
+
+function findSchoolCoords(schoolName){
+	var address = 11;
+	var lat = 1;
+	var long = 2;
+
+	var coordinates = [];
+	coordinates[0] = schools[schoolName][address][lat];
+	coordinates[1] = schools[schoolName][address][long];
+
+	return coordinates;
+}
+
+// function addMarker(coordinates) {
+	
+// }
 
 document.getElementById("schoolCoordBtn").addEventListener("click", function(){
 	// alert('hi');
 
-	findSchoolCoords();
+	addMoreMarkers();
 });
 // var btn = document.getElementById('btn');
 // btn
